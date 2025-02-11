@@ -1,0 +1,42 @@
+.game-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .maze {
+    display: inline-block;
+    margin-top: 10px;
+  }
+  
+  .maze-row {
+    display: flex;
+  }
+  
+  .maze-cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    text-align: center;
+    line-height: 40px;
+  }
+  
+  .wall {
+    background-color: black;
+  }
+  
+  .path {
+    background-color: white;
+  }
+  
+  .start {
+    background-color: green;
+  }
+  
+  .exit {
+    background-color: red;
+  }
+  
+  .player {
+    background-color: blue;
+  }
+  
