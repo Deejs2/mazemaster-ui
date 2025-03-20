@@ -1,0 +1,78 @@
+<div class="game-container">
+    <div class="game-header">
+      <div class="level-info" *ngIf="currentMaze">
+        <h2>Level {{ currentMaze.levelNumber }}</h2>
+        <div class="difficulty {{ currentMaze.levelCategory.toLowerCase() }}">
+          {{ currentMaze.levelCategory }}
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat-item">
+          <i class="bi bi-star-fill"></i>
+          <span>Score: {{ currentMaze?.baseScore }}</span>
+        </div>
+        <div class="stat-item">
+          <i class="bi bi-clock"></i>
+          <span>Time: {{ timer }}s</span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="maze-container" *ngIf="currentMaze">
+      <div class="square-maze">
+        <div class="maze-row" *ngFor="let row of currentMaze.mazeData; let i = index">
+          <div class="maze-cell" 
+               *ngFor="let cell of row; let j = index"
+               [ngClass]="{
+                 'wall': cell === 1,
+                 'path': cell === 0,
+                 'player': playerPosition.row === i && playerPosition.col === j,
+                 'start': currentMaze.startX === i && currentMaze.startY === j,
+                 'end': currentMaze.endX === i && currentMaze.endY === j
+               }">
+            <div class="cell-content" *ngIf="playerPosition.row === i && playerPosition.col === j">
+              <div class="player-icon"></div>
+            </div>
+            <div class="cell-content" *ngIf="currentMaze.endX === i && currentMaze.endY === j">
+              <div class="end-icon"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="game-controls">
+      <div class="control-buttons">
+        <button class="btn reset-btn" (click)="resetMaze()" [disabled]="isAutoSolving">
+          <i class="bi bi-arrow-counterclockwise"></i>
+          Reset
+        </button>
+        <button class="btn auto-solve-btn" (click)="autoSolve()" [disabled]="isGameCompleted || isAutoSolving">
+          <i class="bi bi-lightning-charge-fill"></i>
+          Auto Solve
+        </button>
+      </div>
+      
+      <div class="controls-help">
+        <div class="key-guide">
+          <div class="key-row">
+            <div class="key up">↑</div>
+          </div>
+          <div class="key-row">
+            <div class="key left">←</div>
+            <div class="key down">↓</div>
+            <div class="key right">→</div>
+          </div>
+        </div>
+        <p>Use arrow keys to move</p>
+      </div>
+    </div>
+  
+    <div class="victory-overlay" *ngIf="isGameCompleted">
+      <div class="victory-message">
+        <h2>Maze Completed!</h2>
+        <p>Time: {{ timer }} seconds</p>
+        <button class="btn next-btn" (click)="loadNextMaze()">Next Level</button>
+      </div>
+    </div>
+  </div>
