@@ -1,0 +1,138 @@
+<section class="hero-section text-center py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <h1 class="display-4 fw-bold mb-4" data-aos="fade-up">MazeMaster: Pathfinder's Adventure</h1>
+        <p class="lead mb-5" data-aos="fade-up" data-aos-delay="100">
+          Navigate through challenging mazes and learn about the Breadth-First Search algorithm in this adventure!
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3" data-aos="fade-up" data-aos-delay="200">
+          <a routerLink="/levels" class="btn btn-primary btn-lg">Start Playing</a>
+          <ng-container *ngIf="!(authService.authStatus$ | async)">
+            <a routerLink="/auth/register" class="btn btn-outline-primary btn-lg">Sign Up</a>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5" data-aos="fade-up">Game Features</h2>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card h-100">
+          <div class="card-body text-center p-4">
+            <div class="feature-icon bg-primary text-white rounded-circle mb-3">
+              <i class="bi bi-grid-3x3-gap-fill"></i>
+            </div>
+            <h3 class="card-title h5">15 Unique Mazes</h3>
+            <p class="card-text">Challenge yourself with 15 pre-generated mazes across three difficulty levels.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100">
+          <div class="card-body text-center p-4">
+            <div class="feature-icon bg-primary text-white rounded-circle mb-3">
+              <i class="bi bi-braces"></i>
+            </div>
+            <h3 class="card-title h5">Learn BFS Algorithm</h3>
+            <p class="card-text">Understand how the Breadth-First Search algorithm works through visual demonstrations.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card h-100">
+          <div class="card-body text-center p-4">
+            <div class="feature-icon bg-primary text-white rounded-circle mb-3">
+              <i class="bi bi-trophy"></i>
+            </div>
+            <h3 class="card-title h5">Global Leaderboard</h3>
+            <p class="card-text">Compete with players worldwide and track your progress on the global leaderboard.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how-to-play py-5">
+  <div class="container">
+    <h2 class="text-center mb-5" data-aos="fade-up">How To Play</h2>
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="instructions-box p-4 rounded-lg shadow-sm">
+          <div class="d-flex align-items-center mb-4">
+            <span class="step-number">1</span>
+            <h3 class="mb-0 ms-3">Choose Your Level</h3>
+          </div>
+          <p>Select from Easy, Medium, or Hard difficulty levels. Each difficulty has five progressively challenging mazes.</p>
+          
+          <div class="d-flex align-items-center mb-4 mt-5">
+            <span class="step-number">2</span>
+            <h3 class="mb-0 ms-3">Navigate The Maze</h3>
+          </div>
+          <p>Use the arrow keys or on-screen controls to move through the maze. Find the path from the start (green) to the end (orange).</p>
+          
+          <div class="d-flex align-items-center mb-4 mt-5">
+            <span class="step-number">3</span>
+            <h3 class="mb-0 ms-3">Utilize BFS</h3>
+          </div>
+          <p>Stuck? Use the BFS algorithm to find the shortest path (limited to 3 uses per level).</p>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="maze-preview p-3 bg-white rounded-lg shadow-sm">
+          <div class="maze-grid d-flex flex-wrap justify-content-center">
+            <!-- Simple maze visualization for display purposes -->
+            <ng-container *ngFor="let row of [0, 1, 2, 3, 4, 5, 6]">
+              <div class="d-flex">
+                <ng-container *ngFor="let col of [0, 1, 2, 3, 4, 5, 6]">
+                  <div [class]="getMazeCellClass(row, col)" 
+                       [style.width.px]="35" 
+                       [style.height.px]="35">
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+          <div class="legend mt-4 d-flex flex-wrap justify-content-center gap-3">
+            <div class="d-flex align-items-center">
+              <div class="maze-cell maze-start me-2" style="width: 20px; height: 20px;"></div>
+              <span>Start</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="maze-cell maze-end me-2" style="width: 20px; height: 20px;"></div>
+              <span>End</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="maze-cell maze-wall me-2" style="width: 20px; height: 20px;"></div>
+              <span>Wall</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="maze-cell maze-path me-2" style="width: 20px; height: 20px;"></div>
+              <span>Path</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section py-5 bg-primary text-white text-center">
+  <div class="container">
+    <h2 class="mb-4" data-aos="fade-up">Ready to Challenge Your Pathfinding Skills?</h2>
+    <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">
+      Register to track your progress, save scores, and compete on the leaderboard!
+    </p>
+    <div data-aos="fade-up" data-aos-delay="200">
+      <a routerLink="/levels" class="btn btn-light btn-lg me-2">Start Playing</a>
+      <ng-container *ngIf="!(authService.authStatus$ | async)">
+        <a routerLink="/auth/register" class="btn btn-outline-light btn-lg">Sign Up</a>
+      </ng-container>
+    </div>
+  </div>
+</section>

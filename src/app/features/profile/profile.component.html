@@ -1,0 +1,146 @@
+<div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card profile-card" data-aos="fade-up">
+          <div class="profile-header bg-primary text-white p-4">
+            <div class="profile-avatar">
+              <i class="bi bi-person-circle"></i>
+            </div>
+            <h2 class="h4 mb-0 mt-3">{{ user?.username }}</h2>
+            <p class="mb-0 small">{{ user?.email }}</p>
+          </div>
+          <div class="card-body">
+            <div class="profile-stats">
+              <div class="stat-item">
+                <div class="stat-value">{{ userProgress.length }}</div>
+                <div class="stat-label">Levels Completed</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">{{ getTotalScore() }}</div>
+                <div class="stat-label">Total Score</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">{{ userRank }}</div>
+                <div class="stat-label">Global Rank</div>
+              </div>
+            </div>
+            
+            <div class="profile-actions mt-4">
+              <a routerLink="/levels" class="btn btn-primary w-100">
+                <i class="bi bi-grid-3x3-gap-fill me-2"></i> Play More Levels
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-8">
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+          <div class="card-header bg-primary text-white">
+            <h3 class="h5 mb-0">Your Progress</h3>
+          </div>
+          <div class="card-body">
+            <ng-container *ngIf="userProgress.length > 0; else noProgress">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Level</th>
+                      <th>Difficulty</th>
+                      <th>Score</th>
+                      <th>Time</th>
+                      <th>BFS Used</th>
+                      <th>Last Played</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let progress of userProgress">
+                      <td>{{ getLevelInfo(progress.mazeId).levelNumber }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="'badge-' + getLevelInfo(progress.mazeId).category.toLowerCase()">
+                          {{ getLevelInfo(progress.mazeId).category }}
+                        </span>
+                      </td>
+                      <td>{{ progress.bestScore }}</td>
+                      <td>{{ formatTime(progress.completionTime) }}</td>
+                      <td>{{ progress.bfsUsed }}</td>
+                      <td>{{ formatDate(progress.lastAttempt) }}</td>
+                      <td>
+                        <a [routerLink]="['/game', getLevelInfo(progress.mazeId).category.toLowerCase(), getLevelInfo(progress.mazeId).levelNumber]" 
+                           class="btn btn-sm btn-outline-primary">
+                          <i class="bi bi-play-fill"></i> Replay
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-container>
+            
+            <ng-template #noProgress>
+              <div class="text-center py-5">
+                <i class="bi bi-exclamation-circle text-muted fs-1"></i>
+                <p class="mt-3 mb-0">You haven't completed any levels yet!</p>
+                <p class="text-muted">Start playing to track your progress.</p>
+                <a routerLink="/levels" class="btn btn-primary mt-3">
+                  Start Playing
+                </a>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+        
+        <div class="card mt-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="card-header bg-primary text-white">
+            <h3 class="h5 mb-0">Completion Statistics</h3>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="completion-stat">
+                  <h4 class="h6 mb-2">Easy Levels</h4>
+                  <div class="progress" style="height: 12px;">
+                    <div class="progress-bar bg-success" 
+                         [style.width.%]="getCompletionPercentage('EASY')">
+                    </div>
+                  </div>
+                  <p class="small text-muted mt-1 mb-0">
+                    {{ getCompletedCountByCategory('EASY') }} / 5 Completed ({{ getCompletionPercentage('EASY') }}%)
+                  </p>
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <div class="completion-stat">
+                  <h4 class="h6 mb-2">Medium Levels</h4>
+                  <div class="progress" style="height: 12px;">
+                    <div class="progress-bar bg-warning" 
+                         [style.width.%]="getCompletionPercentage('MEDIUM')">
+                    </div>
+                  </div>
+                  <p class="small text-muted mt-1 mb-0">
+                    {{ getCompletedCountByCategory('MEDIUM') }} / 5 Completed ({{ getCompletionPercentage('MEDIUM') }}%)
+                  </p>
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <div class="completion-stat">
+                  <h4 class="h6 mb-2">Hard Levels</h4>
+                  <div class="progress" style="height: 12px;">
+                    <div class="progress-bar bg-danger" 
+                         [style.width.%]="getCompletionPercentage('HARD')">
+                    </div>
+                  </div>
+                  <p class="small text-muted mt-1 mb-0">
+                    {{ getCompletedCountByCategory('HARD') }} / 5 Completed ({{ getCompletionPercentage('HARD') }}%)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

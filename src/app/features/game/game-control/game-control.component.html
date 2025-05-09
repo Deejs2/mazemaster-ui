@@ -1,0 +1,40 @@
+<div class="controls-container mt-4">
+    <!-- Desktop controls -->
+    <div class="desktop-controls d-none d-md-block">
+      <div class="game-controls">
+        <button class="btn btn-primary" (click)="onUseBFS()">
+          <i class="bi bi-lightning-charge-fill me-1"></i> Use BFS Algorithm
+        </button>
+        
+        <div class="keyboard-hint ms-md-4 text-center text-md-start">
+          <small class="text-muted">
+            Use arrow keys to move, or press <kbd>B</kbd> for BFS
+          </small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile controls -->
+    <div class="mobile-controls d-md-none">
+      <div class="game-controls mb-3">
+        <button class="btn btn-primary w-100" (click)="onUseBFS()">
+          <i class="bi bi-lightning-charge-fill me-1"></i> Use BFS Algorithm
+        </button>
+      </div>
+      
+      <div class="movement-controls">
+        <button class="control-btn btn-up" (click)="onMoveUp()">
+          <i class="bi bi-arrow-up"></i>
+        </button>
+        <button class="control-btn btn-left" (click)="onMoveLeft()">
+          <i class="bi bi-arrow-left"></i>
+        </button>
+        <button class="control-btn btn-right" (click)="onMoveRight()">
+          <i class="bi bi-arrow-right"></i>
+        </button>
+        <button class="control-btn btn-down" (click)="onMoveDown()">
+          <i class="bi bi-arrow-down"></i>
+        </button>
+      </div>
+    </div>
+  </div>

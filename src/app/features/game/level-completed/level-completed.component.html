@@ -1,0 +1,53 @@
+<div class="level-completed-overlay" data-aos="fade-in">
+    <div class="level-completed-modal" data-aos="zoom-in" data-aos-delay="200">
+      <div class="modal-header bg-success text-white">
+        <h2 class="h4 mb-0">Level Completed!</h2>
+      </div>
+      <div class="modal-body">
+        <div class="confetti"></div>
+        
+        <div class="completion-stats">
+          <div class="stat-item">
+            <div class="stat-icon">
+              <i class="bi bi-trophy-fill"></i>
+            </div>
+            <div class="stat-label">Score</div>
+            <div class="stat-value">{{ score }}</div>
+          </div>
+          
+          <div class="stat-item">
+            <div class="stat-icon">
+              <i class="bi bi-clock-fill"></i>
+            </div>
+            <div class="stat-label">Time</div>
+            <div class="stat-value">{{ formatTime(timeElapsed) }}</div>
+          </div>
+          
+          <div class="stat-item">
+            <div class="stat-icon">
+              <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+            <div class="stat-label">BFS Used</div>
+            <div class="stat-value">{{ bfsUsed }}</div>
+          </div>
+        </div>
+        
+        <div class="completion-message text-center mt-4">
+          <p class="lead mb-0">
+            Great job solving the {{ levelCategory | lowercase }} maze #{{ levelNumber }}!
+          </p>
+          <p class="text-muted">
+            {{ getPerformanceMessage() }}
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="onRestart()">
+          <i class="bi bi-arrow-repeat me-1"></i> Restart Level
+        </button>
+        <button class="btn btn-primary" (click)="onNextLevel()">
+          <i class="bi bi-arrow-right me-1"></i> Next Level
+        </button>
+      </div>
+    </div>
+  </div>

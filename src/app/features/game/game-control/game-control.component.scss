@@ -1,0 +1,31 @@
+
+.controls-container {
+    padding: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .movement-controls {
+    display: grid;
+    grid-template-areas:
+      ". up ."
+      "left . right"
+      ". down .";
+    gap: var(--spacing-1);
+    max-width: 220px;
+    margin: 0 auto;
+  }
+  
+  kbd {
+    background-color: #f8f9fa;
+    border-radius: 3px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    color: #495057;
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.2rem 0.4rem;
+  }

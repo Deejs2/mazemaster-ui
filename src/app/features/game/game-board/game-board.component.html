@@ -1,0 +1,131 @@
+<div class="container py-4">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <!-- Level info -->
+        <div class="level-header d-flex justify-content-between align-items-center mb-3">
+          <h1 class="h3 mb-0">
+            {{ levelCategory | titlecase }} - Level {{ levelNumber }}
+          </h1>
+          <button class="btn btn-outline-secondary" (click)="navigateToLevels()">
+            <i class="bi bi-arrow-left me-2"></i> Back to Levels
+          </button>
+        </div>
+        
+        <!-- Game board -->
+        <div class="game-board-container" *ngIf="gameState && !loading; else loadingTemplate">
+          <div class="game-board" [style.grid-template-columns]="getGridTemplateColumns()">
+            <ng-container *ngFor="let row of gameState.maze; let y = index">
+              <app-maze-cell 
+                *ngFor="let cell of row; let x = index"
+                [cell]="cell">
+              </app-maze-cell>
+            </ng-container>
+          </div>
+        </div>
+        
+        <ng-template #loadingTemplate>
+          <div class="loading-container text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading maze...</p>
+          </div>
+        </ng-template>
+        
+        <!-- Mobile Controls -->
+        <app-game-control 
+          *ngIf="gameState && !gameState.isCompleted"
+          (moveUp)="movePlayer('up')"
+          (moveRight)="movePlayer('right')"
+          (moveDown)="movePlayer('down')"
+          (moveLeft)="movePlayer('left')"
+          (useBFS)="showBFSPath()">
+        </app-game-control>
+      </div>
+      
+      <div class="col-lg-4">
+        <!-- Game information -->
+        <app-game-info
+          *ngIf="gameState"
+          [timeElapsed]="gameState.timeElapsed"
+          [score]="gameState.score"
+          [bfsUsed]="gameState.bfsUsed"
+          [bfsRemaining]="maxBfsUses - gameState.bfsUsed">
+        </app-game-info>
+        
+        <!-- Game instructions -->
+        <div class="card mt-4">
+          <div class="card-header bg-primary text-white">
+            <h2 class="h5 mb-0">How to Play</h2>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled mb-0">
+              <li class="mb-2">
+                <i class="bi bi-arrow-right-circle-fill text-primary me-2"></i>
+                Use arrow keys or control buttons to navigate
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-arrow-right-circle-fill text-primary me-2"></i>
+                Find the path from the green start to the orange end
+              </li>
+              <li class="mb-2">
+                <i class="bi bi-arrow-right-circle-fill text-primary me-2"></i>
+                Use BFS button to see the shortest path (limited to 3 times)
+              </li>
+              <li>
+                <i class="bi bi-arrow-right-circle-fill text-primary me-2"></i>
+                Complete faster for a higher score!
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Legend -->
+        <div class="card mt-4">
+          <div class="card-header bg-primary text-white">
+            <h2 class="h5 mb-0">Legend</h2>
+          </div>
+          <div class="card-body">
+            <div class="d-flex flex-wrap gap-3">
+              <div class="d-flex align-items-center">
+                <div class="maze-cell maze-wall me-2" style="width: 20px; height: 20px;"></div>
+                <span>Wall</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="maze-cell maze-path me-2" style="width: 20px; height: 20px;"></div>
+                <span>Path</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="maze-cell maze-start me-2" style="width: 20px; height: 20px;"></div>
+                <span>Start</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="maze-cell maze-end me-2" style="width: 20px; height: 20px;"></div>
+                <span>End</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="maze-cell maze-player me-2" style="width: 20px; height: 20px;"></div>
+                <span>Player</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="maze-cell maze-solution me-2" style="width: 20px; height: 20px;"></div>
+                <span>Solution</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Level completed modal -->
+    <app-level-completed
+      *ngIf="gameState?.isCompleted"
+      [score]="gameState.score || 0"
+      [timeElapsed]="gameState.timeElapsed || 0"
+      [bfsUsed]="gameState.bfsUsed || 0"
+      [levelCategory]="levelCategory"
+      [levelNumber]="levelNumber"
+      (restart)="restartLevel()"
+      (nextLevel)="goToNextLevel()">
+    </app-level-completed>
+  </div>
