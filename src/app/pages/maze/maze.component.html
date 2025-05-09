@@ -1,78 +1,201 @@
-<div class="game-container">
-    <div class="game-header">
-      <div class="level-info" *ngIf="currentMaze">
-        <h2>Level {{ currentMaze.levelNumber }}</h2>
-        <div class="difficulty {{ currentMaze.levelCategory.toLowerCase() }}">
-          {{ currentMaze.levelCategory }}
-        </div>
-      </div>
-      <div class="stats">
-        <div class="stat-item">
-          <i class="bi bi-star-fill"></i>
-          <span>Score: {{ currentMaze?.baseScore }}</span>
-        </div>
-        <div class="stat-item">
-          <i class="bi bi-clock"></i>
-          <span>Time: {{ timer }}s</span>
-        </div>
-      </div>
+<div class="maze-container">
+  <div class="container py-4">
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <h1 class="display-4 fw-bold">Maze Challenge</h1>
+      <p class="lead">Test your problem-solving skills with these fun mazes!</p>
     </div>
-  
-    <div class="maze-container" *ngIf="currentMaze">
-      <div class="square-maze">
-        <div class="maze-row" *ngFor="let row of currentMaze.mazeData; let i = index">
-          <div class="maze-cell" 
-               *ngFor="let cell of row; let j = index"
-               [ngClass]="{
-                 'wall': cell === 1,
-                 'path': cell === 0,
-                 'player': playerPosition.row === i && playerPosition.col === j,
-                 'start': currentMaze.startX === i && currentMaze.startY === j,
-                 'end': currentMaze.endX === i && currentMaze.endY === j
-               }">
-            <div class="cell-content" *ngIf="playerPosition.row === i && playerPosition.col === j">
-              <div class="player-icon"></div>
+
+    <!-- Level Selection -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h3>Difficulty: {{levelCategory}}</h3>
+            <div class="d-flex align-items-center">
+              <button class="btn btn-outline-primary" [disabled]="levelNumber <= 1" (click)="changeLevelNumber(-1)">
+                <i class="bi bi-arrow-left"></i>
+              </button>
+              <h4 class="mx-3 mb-0">Level: {{levelNumber}}</h4>
+              <button class="btn btn-outline-primary" 
+                     [disabled]="levelNumber >= 5 || (!isLevelCompleted(levelNumber) && !gameWon)" 
+                     (click)="changeLevelNumber(1)"
+                     [ngClass]="{'btn-outline-secondary': !isLevelCompleted(levelNumber) && !gameWon}">
+                <i class="bi" [ngClass]="isLevelCompleted(levelNumber) || gameWon ? 'bi-arrow-right' : 'bi-lock'"></i>
+              </button>
             </div>
-            <div class="cell-content" *ngIf="currentMaze.endX === i && currentMaze.endY === j">
-              <div class="end-icon"></div>
+            <div class="mt-2 small">
+              <span *ngIf="!isLevelCompleted(levelNumber) && !gameWon" class="text-muted">
+                <i class="bi bi-info-circle"></i> Complete this level to unlock the next one
+              </span>
+              <span *ngIf="isLevelCompleted(levelNumber) && !gameWon" class="text-success">
+                <i class="bi bi-check-circle"></i> Level completed!
+              </span>
             </div>
           </div>
+          <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <button class="btn btn-primary me-2" (click)="loadMaze()">
+              <i class="bi bi-arrow-repeat me-2"></i>Restart Level
+            </button>
+            <button class="btn btn-outline-danger" (click)="resetProgress()">
+              <i class="bi bi-trash me-2"></i>Reset All Progress
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  
-    <div class="game-controls">
-      <div class="control-buttons">
-        <button class="btn reset-btn" (click)="resetMaze()" [disabled]="isAutoSolving">
-          <i class="bi bi-arrow-counterclockwise"></i>
-          Reset
-        </button>
-        <button class="btn auto-solve-btn" (click)="autoSolve()" [disabled]="isGameCompleted || isAutoSolving">
-          <i class="bi bi-lightning-charge-fill"></i>
-          Auto Solve
-        </button>
-      </div>
-      
-      <div class="controls-help">
-        <div class="key-guide">
-          <div class="key-row">
-            <div class="key up">↑</div>
-          </div>
-          <div class="key-row">
-            <div class="key left">←</div>
-            <div class="key down">↓</div>
-            <div class="key right">→</div>
+
+    <!-- Game Stats -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card text-center shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title">Moves</h5>
+            <p class="display-6">{{moves}}</p>
           </div>
         </div>
-        <p>Use arrow keys to move</p>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title">Timer</h5>
+            <p class="display-6">{{timer}}s</p>
+            <p class="small text-muted" *ngIf="!timerStarted && !gameWon">Starts with first move</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title">Level Score</h5>
+            <p class="display-6">{{baseScore}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center shadow-sm h-100" [ngClass]="{'bg-light-success': totalScore > 0}">
+          <div class="card-body">
+            <h5 class="card-title">Total Score</h5>
+            <p class="display-6">{{totalScore}}</p>
+            <div class="progress mt-2" *ngIf="completedLevels.length > 0">
+              <div class="progress-bar bg-success" role="progressbar" 
+                   [style.width]="(completedLevels.length / 5) * 100 + '%'"
+                   [attr.aria-valuenow]="completedLevels.length" 
+                   aria-valuemin="0" aria-valuemax="5">
+                {{completedLevels.length}}/5
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  
-    <div class="victory-overlay" *ngIf="isGameCompleted">
-      <div class="victory-message">
-        <h2>Maze Completed!</h2>
-        <p>Time: {{ timer }} seconds</p>
-        <button class="btn next-btn" (click)="loadNextMaze()">Next Level</button>
+
+    <!-- Game Area -->
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <!-- Loading State -->
+            <div *ngIf="loading" class="text-center p-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-3">Loading maze...</p>
+            </div>
+
+            <!-- Error State -->
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              {{errorMessage}}
+            </div>
+
+            <!-- Maze Grid -->
+            <div *ngIf="!loading && !errorMessage" class="maze-grid-container">
+              <div class="maze-grid">
+                <div class="maze-row" *ngFor="let row of maze; let rowIndex = index">
+                  <div class="maze-cell" 
+                       *ngFor="let cell of row; let colIndex = index"
+                       [ngClass]="getCellClass(cell, rowIndex, colIndex)">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Win Message -->
+            <div *ngIf="gameWon" class="win-overlay">
+              <div class="win-message">
+                <h2>Congratulations!</h2>
+                <p>You completed the maze in {{timer}} seconds with {{moves}} moves.</p>
+                <div class="score-details">
+                  <div class="row mb-3">
+                    <div class="col">Level Score:</div>
+                    <div class="col text-end fw-bold">+{{score}}</div>
+                  </div>
+                  <div class="row total-score">
+                    <div class="col">Total Score:</div>
+                    <div class="col text-end fw-bold">{{totalScore}}</div>
+                  </div>
+                </div>
+                <div class="d-flex flex-column flex-sm-row justify-content-center mt-4">
+                  <button class="btn btn-lg btn-success mb-2 mb-sm-0" (click)="loadMaze()">Play Again</button>
+                  <button *ngIf="levelNumber < 5" class="btn btn-lg btn-primary ms-sm-2" (click)="changeLevelNumber(1)">Next Level</button>
+                </div>
+                <div *ngIf="levelNumber >= 5 && completedLevels.length >= 5" class="mt-3 text-center">
+                  <div class="alert alert-success">
+                    <i class="bi bi-trophy me-2"></i>You've completed all levels! Total score: {{totalScore}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mt-4 mt-lg-0">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Controls</h5>
+            <p>Use arrow keys or buttons below to navigate the maze.</p>
+            
+            <div class="controls-grid">
+              <button class="btn btn-secondary" (click)="move('up')">
+                <i class="bi bi-arrow-up"></i>
+              </button>
+              <div class="controls-row">
+                <button class="btn btn-secondary" (click)="move('left')">
+                  <i class="bi bi-arrow-left"></i>
+                </button>
+                <button class="btn btn-secondary" (click)="move('down')">
+                  <i class="bi bi-arrow-down"></i>
+                </button>
+                <button class="btn btn-secondary" (click)="move('right')">
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Instructions</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <span class="badge bg-primary me-2">Start</span>
+                You start from the blue square.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-success me-2">Goal</span>
+                Reach the green square to win.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-dark me-2">Wall</span>
+                Avoid the black walls.
+              </li>
+              <li class="list-group-item">Complete the maze quickly with fewer moves for a higher score!</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>

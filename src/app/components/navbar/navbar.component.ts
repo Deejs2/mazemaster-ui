@@ -1,13 +1,28 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+  
+  scrolled = false;
 
+  constructor() { }
+
+  ngOnInit(): void {
+    // Check scroll position on page load
+    this.checkScroll();
+  }
+
+  @HostListener('window:scroll', [])
+  checkScroll() {
+    // Apply class when page is scrolled past 50px
+    this.scrolled = window.pageYOffset > 50;
+  }
 }
