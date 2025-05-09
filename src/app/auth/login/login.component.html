@@ -1,0 +1,67 @@
+<div class="container-fluid game-auth-container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+      <div class="col-md-6 col-lg-5 col-xl-4">
+        <div class="card auth-card">
+          <div class="card-header text-center">
+            <h2 class="game-title">Game Portal</h2>
+            <div class="pixel-avatar mx-auto mb-2"></div>
+          </div>
+          <div class="card-body">
+            <div class="text-center mb-4">
+              <h3>Login to Your Adventure</h3>
+              <div class="progress level-progress mb-2">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" [style.width]="loginProgress + '%'"></div>
+              </div>
+              <small class="text-muted" *ngIf="loginProgress < 100">Complete your login to continue...</small>
+              <small class="text-success" *ngIf="loginProgress === 100">Ready to enter the game world!</small>
+            </div>
+            
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+              <div class="form-group mb-3">
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                  <input 
+                    type="text" 
+                    formControlName="username" 
+                    class="form-control" 
+                    placeholder="Username" 
+                    (focus)="updateProgress()"
+                    [ngClass]="{'is-invalid': submitted && f['username'].errors}">
+                </div>
+                <div *ngIf="submitted && f['username'].errors" class="invalid-feedback d-block">
+                  <div *ngIf="f['username'].errors['required']">Username is required</div>
+                </div>
+              </div>
+              
+              <div class="form-group mb-4">
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                  <input 
+                    type="password" 
+                    formControlName="password" 
+                    class="form-control" 
+                    placeholder="Password" 
+                    (focus)="updateProgress()"
+                    [ngClass]="{'is-invalid': submitted && f['password'].errors}">
+                </div>
+                <div *ngIf="submitted && f['password'].errors" class="invalid-feedback d-block">
+                  <div *ngIf="f['password'].errors['required']">Password is required</div>
+                </div>
+              </div>
+              
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary game-button" [disabled]="loading">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                  Start Adventure
+                </button>
+              </div>
+            </form>
+            
+            <div class="text-center mt-3">
+              <p>New player? <a class="register-link" (click)="goToRegister()">Create your character</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
