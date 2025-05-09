@@ -1,0 +1,81 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <div class="card shadow-sm border-0" data-aos="fade-up">
+          <div class="card-header bg-primary text-white text-center py-3">
+            <h3 class="mb-0">Login</h3>
+          </div>
+          <div class="card-body p-4">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                  <input 
+                    type="email" 
+                    formControlName="email" 
+                    class="form-control" 
+                    id="email" 
+                    placeholder="Enter your email"
+                    [ngClass]="{'is-invalid': submitted && f['email'].errors}"
+                  >
+                </div>
+                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback d-block">
+                  <div *ngIf="f['email'].errors['required']">Email is required</div>
+                  <div *ngIf="f['email'].errors['email']">Email must be valid</div>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                  <input 
+                    type="password" 
+                    formControlName="password" 
+                    class="form-control" 
+                    id="password" 
+                    placeholder="Enter your password"
+                    [ngClass]="{'is-invalid': submitted && f['password'].errors}"
+                  >
+                </div>
+                <div *ngIf="submitted && f['password'].errors" class="invalid-feedback d-block">
+                  <div *ngIf="f['password'].errors['required']">Password is required</div>
+                </div>
+              </div>
+              
+              <div class="d-grid">
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="loading"
+                >
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                  Login
+                </button>
+              </div>
+              
+              <div *ngIf="error" class="alert alert-danger mt-3">
+                {{ error }}
+              </div>
+            </form>
+            
+            <!-- Quick login for demo -->
+            <div class="mt-4 pt-3 border-top">
+              <p class="text-center mb-3">For demo purposes:</p>
+              <div class="d-grid">
+                <button (click)="simulateLogin()" class="btn btn-outline-primary">
+                  Quick Login as Demo User
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer bg-light py-3 text-center">
+            <p class="mb-0">
+              Don't have an account? <a routerLink="/auth/register" class="text-primary">Register</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

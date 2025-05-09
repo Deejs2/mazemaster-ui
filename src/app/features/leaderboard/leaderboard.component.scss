@@ -1,0 +1,35 @@
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-weight: bold;
+  }
+  
+  .rank-1 {
+    background-color: gold;
+    color: #333;
+  }
+  
+  .rank-2 {
+    background-color: silver;
+    color: #333;
+  }
+  
+  .rank-3 {
+    background-color: #cd7f32; /* bronze */
+    color: white;
+  }
+  
+  .rank-other {
+    background-color: #e9ecef;
+    color: #495057;
+  }
+  
+  .btn-outline-light.active {
+    background-color: white;
+    color: var(--primary);
+  }

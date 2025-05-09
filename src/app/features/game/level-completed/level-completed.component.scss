@@ -1,0 +1,118 @@
+.level-completed-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .level-completed-modal {
+    width: 90%;
+    max-width: 500px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  .modal-header {
+    padding: 1.25rem;
+    text-align: center;
+  }
+  
+  .modal-body {
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .modal-footer {
+    padding: 1.25rem;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .completion-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+  }
+  
+  .stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.25rem;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  
+  .confetti {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: 
+      radial-gradient(circle, var(--primary) 2px, transparent 2px),
+      radial-gradient(circle, var(--accent) 2px, transparent 2px),
+      radial-gradient(circle, var(--secondary) 2px, transparent 2px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px, 5px 5px;
+    animation: confetti-fall 10s linear infinite;
+  }
+  
+  @keyframes confetti-fall {
+    0% {
+      background-position: 0 -100px, 15px -85px, 5px -90px;
+    }
+    100% {
+      background-position: 0 500px, 15px 515px, 5px 510px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .completion-stats {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    
+    .stat-icon {
+      font-size: 1.5rem;
+    }
+    
+    .stat-value {
+      font-size: 1.25rem;
+    }
+    
+    .modal-footer {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .modal-footer button {
+      width: 100%;
+    }
+  }

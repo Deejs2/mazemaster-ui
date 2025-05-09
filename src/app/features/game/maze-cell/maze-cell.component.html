@@ -1,0 +1,20 @@
+<div 
+      class="maze-cell"
+      [class.maze-wall]="cell.isWall"
+      [class.maze-path]="!cell.isWall && !cell.isStart && !cell.isEnd && !cell.isPlayer && !cell.isSolution"
+      [class.maze-start]="cell.isStart && !cell.isPlayer"
+      [class.maze-end]="cell.isEnd && !cell.isPlayer"
+      [class.maze-player]="cell.isPlayer"
+      [class.maze-visited]="cell.isVisited && !cell.isStart && !cell.isEnd && !cell.isPlayer && !cell.isSolution"
+      [class.maze-solution]="cell.isSolution && !cell.isPlayer"
+    >
+      <ng-container *ngIf="cell.isPlayer">
+        <i class="bi bi-person-fill cell-icon"></i>
+      </ng-container>
+      <ng-container *ngIf="cell.isStart && !cell.isPlayer">
+        <i class="bi bi-house-fill cell-icon"></i>
+      </ng-container>
+      <ng-container *ngIf="cell.isEnd && !cell.isPlayer">
+        <i class="bi bi-flag-fill cell-icon"></i>
+      </ng-container>
+    </div>

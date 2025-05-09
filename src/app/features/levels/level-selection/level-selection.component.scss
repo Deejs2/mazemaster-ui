@@ -1,0 +1,21 @@
+
+.difficulty-category {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .difficulty-header {
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .level-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  
+  .locked-message {
+    font-size: 0.9rem;
+    color: var(--dark);
+  }

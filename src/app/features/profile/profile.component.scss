@@ -1,0 +1,39 @@
+
+.profile-card {
+    height: 100%;
+  }
+  
+  .profile-header {
+    text-align: center;
+    border-radius: 0.25rem 0.25rem 0 0;
+  }
+  
+  .profile-avatar {
+    font-size: 4rem;
+    margin: 0 auto;
+  }
+  
+  .profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--dark);
+  }
+  
+  .completion-stat {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    height: 100%;
+  }

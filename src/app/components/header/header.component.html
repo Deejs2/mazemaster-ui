@@ -1,0 +1,48 @@
+<header class="navbar navbar-expand-md navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" routerLink="/">
+        <span class="bi bi-grid-3x3-gap-fill me-2 fs-4"></span>
+        <span class="game-title">MazeMaster</span>
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+              data-bs-target="#navbarNav" aria-controls="navbarNav" 
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/levels">Levels</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/leaderboard">Leaderboard</a>
+          </li>
+        </ul>
+        
+        <ul class="navbar-nav">
+          <ng-container *ngIf="(authService.authStatus$ | async); else notLoggedIn">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/profile">
+                <span class="bi bi-person-circle me-1"></span>
+                {{ (authService.currentUser$ | async)?.username }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-outline-light ms-2" (click)="logout()">Logout</button>
+            </li>
+          </ng-container>
+          
+          <ng-template #notLoggedIn>
+            <li class="nav-item">
+              <a class="btn btn-outline-light me-2" routerLink="/auth/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-secondary" routerLink="/auth/register">Register</a>
+            </li>
+          </ng-template>
+        </ul>
+      </div>
+    </div>
+  </header>

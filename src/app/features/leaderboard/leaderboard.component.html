@@ -1,0 +1,90 @@
+<div class="container py-5">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h1 class="mb-3">Global Leaderboard</h1>
+      <p class="lead">
+        Top players ranked by total score and completion time
+      </p>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+          <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+              <h2 class="h5 mb-0">Top Players</h2>
+              
+              <div class="btn-group" role="group">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-light btn-sm" 
+                  [class.active]="activeTab === 'global'"
+                  (click)="setActiveTab('global')">
+                  Global
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-light btn-sm" 
+                  [class.active]="activeTab === 'easy'"
+                  (click)="setActiveTab('easy')">
+                  Easy
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-light btn-sm" 
+                  [class.active]="activeTab === 'medium'"
+                  (click)="setActiveTab('medium')">
+                  Medium
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-light btn-sm" 
+                  [class.active]="activeTab === 'hard'"
+                  (click)="setActiveTab('hard')">
+                  Hard
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover table-striped mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Score</th>
+                    <th>Time</th>
+                    <th>Levels</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let entry of currentLeaderboard; let i = index" 
+                      [class.table-primary]="isCurrentUser(entry.userId)">
+                    <td class="text-center">
+                      <span class="rank-badge" [class]="getRankClass(i + 1)">{{ i + 1 }}</span>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <i *ngIf="isCurrentUser(entry.userId)" class="bi bi-person-fill text-primary me-2"></i>
+                        {{ entry.username }}
+                        <span *ngIf="isCurrentUser(entry.userId)" class="badge bg-primary ms-2">You</span>
+                      </div>
+                    </td>
+                    <td>{{ entry.totalScore }}</td>
+                    <td>{{ formatTime(entry.totalTime) }}</td>
+                    <td>{{ entry.levelsCompleted }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 text-center" data-aos="fade-up" data-aos-delay="200">
+          <a routerLink="/levels" class="btn btn-primary">
+            Join the Competition
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
