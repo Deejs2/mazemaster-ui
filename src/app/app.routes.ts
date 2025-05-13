@@ -22,6 +22,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/auth/register/register.component')
           .then(m => m.RegisterComponent),
         canActivate: [guestGuard]
+      },
+      {
+        path: 'verify/:email',
+        loadComponent: () => import('./features/auth/verify-email/verify-email.component')
+          .then(m => m.VerifyEmailComponent),
+        canActivate: [guestGuard]
       }
     ]
   },

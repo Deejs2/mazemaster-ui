@@ -1,0 +1,90 @@
+<div class="container-fluid otp-container">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7 col-sm-9 col-11">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold">Email Verification</h2>
+            <p class="text-muted">Please enter the 6-digit verification code sent to</p>
+            <p class="fw-bold email-display">{{ email }}</p>
+          </div>
+
+          <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+            <div class="otp-input-container mb-4">
+              <div class="otp-inputs">
+                <input 
+                  *ngFor="let control of otpControls; let i = index"
+                  type="text" 
+                  class="form-control otp-digit" 
+                  maxlength="1" 
+                  [formControlName]="'digit' + i"
+                  (keydown)="onKeyDown($event, i)"
+                  (input)="onInput($event, i)"
+                  #otpInput
+                  autocomplete="off">
+              </div>
+              <div *ngIf="otpForm.invalid && (otpForm.dirty || otpForm.touched)" class="text-danger text-center mt-2">
+                <small *ngIf="isAnyDigitInvalid()">All digits are required</small>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-lg" [disabled]="otpForm.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Verify
+              </button>
+            </div>
+          </form>
+
+          <div class="text-center mt-4">
+            <p class="mb-0">Didn't receive the code?</p>
+            <button 
+              class="btn btn-link p-0" 
+              (click)="resendOtp()" 
+              [disabled]="cooldownTimer > 0 || isResending">
+              <span *ngIf="isResending" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              Resend Code 
+              <span *ngIf="cooldownTimer > 0">({{ cooldownTimer }}s)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center p-4">
+        <div class="success-icon mb-3">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h3 class="fw-bold">Email Verified Successfully!</h3>
+        <p class="text-muted">Your email has been verified successfully.</p>
+        <button type="button" class="btn btn-primary btn-lg" (click)="goToLogin()">
+          Continue to Login
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center p-4">
+        <div class="error-icon mb-3">
+          <i class="bi bi-x-circle-fill"></i>
+        </div>
+        <h3 class="fw-bold">Verification Failed</h3>
+        <p class="text-muted">{{ errorMessage }}</p>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Try Again
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

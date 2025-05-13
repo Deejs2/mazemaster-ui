@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { User, AuthResponse } from '../models/user.model';
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/v1/auth';
+  private apiUrl = environment.baseUrl + '/auth';
+  private otpUrl = environment.baseUrl + '/otp';
+  
   private tokenKey = 'maze_master_token';
   private userKey = 'maze_master_user';
   
@@ -18,7 +22,7 @@ export class AuthService {
   public authStatus$ = this.authStatusSubject.asObservable();
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   // Check if user is authenticated on app load
   checkAuth(): void {
@@ -37,9 +41,9 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<User> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/sign-in`, { email, password }).pipe(
       tap(response => this.handleAuthentication(response)),
-      map(response => response.user),
+      map(response => response.data.user),
       catchError(error => {
         console.error('Login error:', error);
         return throwError(() => new Error(error.error?.message || 'Login failed'));
@@ -49,8 +53,10 @@ export class AuthService {
 
   register(username: string, email: string, password: string): Observable<User> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, { username, email, password }).pipe(
-      tap(response => this.handleAuthentication(response)),
-      map(response => response.user),
+      tap(() => {
+        this.router.navigate([`/auth/verify/${email}`]);
+      }),
+      map(response => response.data.user),
       catchError(error => {
         console.error('Registration error:', error);
         return throwError(() => new Error(error.error?.message || 'Registration failed'));
@@ -78,9 +84,9 @@ export class AuthService {
   }
 
   private handleAuthentication(response: AuthResponse): void {
-    localStorage.setItem(this.tokenKey, response.token);
-    localStorage.setItem(this.userKey, JSON.stringify(response.user));
-    this.currentUserSubject.next(response.user);
+    localStorage.setItem(this.tokenKey, response.data.token);
+    localStorage.setItem(this.userKey, JSON.stringify(response.data.user));
+    this.currentUserSubject.next(response.data.user);
     this.authStatusSubject.next(true);
   }
   
@@ -90,7 +96,6 @@ export class AuthService {
       id: 1,
       username,
       email: `${username}@example.com`,
-      createdAt: new Date().toISOString(),
       lastLogin: new Date().toISOString()
     };
     
@@ -100,5 +105,15 @@ export class AuthService {
     localStorage.setItem(this.userKey, JSON.stringify(mockUser));
     this.currentUserSubject.next(mockUser);
     this.authStatusSubject.next(true);
+  }
+
+  // Validate OTP
+  validateOtp(email: string, otp: string): Observable<any> {
+    return this.http.post(`${this.otpUrl}/validate`, { email, otp });
+  }
+
+  // Resend OTP
+  resendOtp(email: string): Observable<any> {
+    return this.http.post(`${this.otpUrl}/resend`, email);
   }
 }

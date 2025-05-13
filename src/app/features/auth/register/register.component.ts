@@ -70,7 +70,7 @@ export class RegisterComponent {
         this.f['password'].value
       ).subscribe({
         next: () => {
-          this.router.navigate(['/levels']);
+          this.router.navigate([`/auth/verify/${this.f['email'].value}`]);
         },
         error: error => {
           this.error = error;
