@@ -1,0 +1,112 @@
+.otp-container {
+  min-height: 60vh;
+  align-items: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 80px 0;
+}
+
+.card {
+  border-radius: 15px;
+  border: none;
+  overflow: hidden;
+  
+  .card-body {
+    padding: 2.5rem;
+  }
+}
+
+.email-display {
+  color: #3e64ff;
+  font-size: 1.1rem;
+  word-break: break-all;
+}
+
+.otp-input-container {
+  .otp-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .otp-digit {
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    
+    &:focus {
+      border-color: #3e64ff;
+      box-shadow: 0 0 0 0.25rem rgba(62, 100, 255, 0.25);
+    }
+  }
+}
+
+.btn-primary {
+  background-color: #3e64ff;
+  border-color: #3e64ff;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  
+  &:hover, &:focus {
+    background-color: darken(#3e64ff, 10%);
+    border-color: darken(#3e64ff, 10%);
+  }
+  
+  &:disabled {
+    background-color: lighten(#3e64ff, 20%);
+    border-color: lighten(#3e64ff, 20%);
+  }
+}
+
+.btn-link {
+  color: #3e64ff;
+  text-decoration: none;
+  font-weight: 600;
+  
+  &:hover {
+    color: darken(#3e64ff, 10%);
+    text-decoration: underline;
+  }
+  
+  &:disabled {
+    color: #aaa;
+  }
+}
+
+// Success Modal Styling
+.success-icon {
+  font-size: 4rem;
+  color: #28a745;
+}
+
+// Error Modal Styling
+.error-icon {
+  font-size: 4rem;
+  color: #dc3545;
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .otp-digit {
+    width: 40px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .otp-digit {
+    width: 35px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+}

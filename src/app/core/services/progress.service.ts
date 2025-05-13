@@ -4,12 +4,13 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { UserProgress } from '../models/maze.model';
 import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProgressService {
-  private apiUrl = 'http://localhost:8080/api/v1/progress';
+  private apiUrl = environment.baseUrl+'/user-progress';
   
   // For demonstration purposes, we'll store progress locally as well
   private progressKey = 'maze_master_progress';
@@ -51,7 +52,7 @@ export class ProgressService {
       return of(this.getLocalProgress());
     }
     
-    return this.http.get<UserProgress[]>(`${this.apiUrl}/user/${user.id}`).pipe(
+    return this.http.get<UserProgress[]>(`${this.apiUrl}/${user.id}`).pipe(
       catchError(error => {
         console.error('Error fetching progress:', error);
         return of(this.getLocalProgress());
