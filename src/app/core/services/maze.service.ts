@@ -39,26 +39,30 @@ export class MazeService {
 
   // Convert maze data to cell representation for the game board
   convertMazeDataToCells(maze: Maze): MazeCell[][] {
-    const cells: MazeCell[][] = [];
-    
-    for (let y = 0; y < maze.mazeData.length; y++) {
-      cells[y] = [];
-      for (let x = 0; x < maze.mazeData[y].length; x++) {
-        cells[y][x] = {
-          x,
-          y,
-          isWall: maze.mazeData[y][x] === 1,
-          isStart: x === maze.startX && y === maze.startY,
-          isEnd: x === maze.endX && y === maze.endY,
-          isPlayer: x === maze.startX && y === maze.startY,
-          isVisited: false,
-          isSolution: false
-        };
-      }
+  const cells: MazeCell[][] = [];
+
+  for (let y = 0; y < maze.mazeData.length; y++) {
+    cells[y] = [];
+    for (let x = 0; x < maze.mazeData[y].length; x++) {
+      const isStart = x === maze.startX && y === maze.startY;
+      const isEnd = x === maze.endX && y === maze.endY;
+
+      cells[y][x] = {
+        x,
+        y,
+        isWall: !(isStart || isEnd) && maze.mazeData[y][x] === 1,
+        isStart,
+        isEnd,
+        isPlayer: isStart,
+        isVisited: false,
+        isSolution: false
+      };
     }
-    
-    return cells;
   }
+
+  return cells;
+}
+
 
   // Implement BFS algorithm for pathfinding
   findPathBFS(maze: MazeCell[][], start: PlayerPosition, end: PlayerPosition): PlayerPosition[] {

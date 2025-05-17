@@ -25,10 +25,11 @@ export class LevelCardComponent {
       this.progressService.hasCompletedLevel(this.maze.id).subscribe({
         next: (completed) => {
           this.completed = completed;
+          console.log('Level completed status for maze ID', this.maze.id, ':', completed);
         }
       });
     }
-    
+
     getDifficultyBadgeClass(): string {
       switch(this.maze.levelCategory) {
         case 'EASY':

@@ -22,7 +22,8 @@ export class ProgressService {
 
   saveProgress(mazeId: number, score: number, time: number, bfsUsed: number): Observable<UserProgress> {
     const user = this.authService.getCurrentUser();
-    
+    console.log('Saving progress for user:', user);
+
     if (!user) {
       return of({ mazeId, bestScore: score, completionTime: time, bfsUsed, attempts: 1, lastAttempt: new Date().toISOString() });
     }
@@ -47,12 +48,18 @@ export class ProgressService {
 
   getUserProgress(): Observable<UserProgress[]> {
     const user = this.authService.getCurrentUser();
-    
+
     if (!user) {
       return of(this.getLocalProgress());
     }
-    
-    return this.http.get<UserProgress[]>(`${this.apiUrl}/${user.id}`).pipe(
+
+    return this.http.get<any>(`${this.apiUrl}/${user.id}`).pipe(
+      map(response => {
+        const progress = response.data ?? [];
+        localStorage.setItem(this.progressKey, JSON.stringify(progress));
+        console.log('Fetched progress:', progress);
+        return progress;
+      }),
       catchError(error => {
         console.error('Error fetching progress:', error);
         return of(this.getLocalProgress());
@@ -112,33 +119,26 @@ export class ProgressService {
   // Check if player has completed a level
   hasCompletedLevel(mazeId: number): Observable<boolean> {
     return this.getUserProgress().pipe(
-      map(progress => progress.some(p => p.mazeId === mazeId))
+      map(progress => Array.isArray(progress) ? progress.some(p => p.mazeId === mazeId) : false)
     );
   }
   
   // Get the highest level completed in a category
   getHighestLevelCompleted(category: string): Observable<number> {
-    return this.getUserProgress().pipe(
-      map(progress => {
-        // We would need to map mazeIds to categories here
-        // For demo, assume mazeIds 1-5 are EASY, 6-10 are MEDIUM, 11-15 are HARD
-        const categoryRanges = {
-          'EASY': [1, 2, 3, 4, 5],
-          'MEDIUM': [6, 7, 8, 9, 10],
-          'HARD': [11, 12, 13, 14, 15]
-        };
-        
-        const completedInCategory = progress
-          .filter(p => categoryRanges[category as keyof typeof categoryRanges].includes(p.mazeId))
-          .map(p => p.mazeId);
-        
-        if (completedInCategory.length === 0) {
-          return 0;
-        }
-        
-        // Return the level number (1-5) rather than maze ID
-        return completedInCategory.length;
-      })
-    );
-  }
+  return this.http.get<any>(`${this.apiUrl}/highest-level?category=${category}`).pipe(
+    map(response => {
+      // Ensure the response contains the expected data
+      if (response && response.status && response.data && response.data.highestLevel !== undefined) {
+        return response.data.highestLevel; // Extract the highest level
+      } else {
+        console.error(`Unexpected response format for category ${category}:`, response);
+        return 0; // Default to 0 if the response is invalid
+      }
+    }),
+    catchError(error => {
+      console.error(`Error fetching highest level for category ${category}:`, error);
+      return of(0); // Return 0 in case of an error
+    })
+  );
+}
 }
