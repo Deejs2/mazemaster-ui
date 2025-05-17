@@ -35,6 +35,8 @@ export class LevelSelectionComponent implements OnInit {
   
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isAuthenticated();
+
+    console.log('User authenticated:', this.isAuthenticated);
     
     // Load mazes by category
     this.loadMazesByCategory('EASY');
@@ -80,8 +82,9 @@ export class LevelSelectionComponent implements OnInit {
   
   getHighestLevelCompleted(category: string): void {
     this.progressService.getHighestLevelCompleted(category).subscribe({
-      next: (level) => {
-        this.highestLevelCompleted[category as keyof typeof this.highestLevelCompleted] = level;
+      next: (highestLevel) => {
+        this.highestLevelCompleted[category as keyof typeof this.highestLevelCompleted] = highestLevel;
+        console.log(`Highest level completed for ${category}:`, highestLevel);
       },
       error: (error) => {
         console.error(`Error getting highest level for ${category}:`, error);
