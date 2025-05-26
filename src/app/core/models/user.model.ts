@@ -24,5 +24,12 @@ export interface LeaderboardEntry {
   username: string;
   totalScore: number;
   totalTime: number;
-  levelsCompleted: number;
+  levelsCompleted: LevelDetails;
+  isOnline: any;
+  globalRank: any;
+}
+
+export interface LevelDetails {
+  levelCategory: string;
+  levelNumber: number;
 }

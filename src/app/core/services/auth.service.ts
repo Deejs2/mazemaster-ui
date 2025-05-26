@@ -12,6 +12,7 @@ import { environment } from '../../../environments/environment.development';
 export class AuthService {
   private apiUrl = environment.baseUrl + '/auth';
   private otpUrl = environment.baseUrl + '/otp';
+  private userUrl = environment.baseUrl + '/public/getUserById';
   
   private tokenKey = 'maze_master_token';
   private userKey = 'maze_master_user';
@@ -65,8 +66,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.userKey);
+    localStorage.clear();
     this.currentUserSubject.next(null);
     this.authStatusSubject.next(false);
   }
@@ -89,23 +89,6 @@ export class AuthService {
     this.currentUserSubject.next(response.data.user);
     this.authStatusSubject.next(true);
   }
-  
-  // For demo/development purposes - simulate login without backend
-  simulateLogin(username: string): void {
-    const mockUser: User = {
-      id: 1,
-      username,
-      email: `${username}@example.com`,
-      lastLogin: new Date().toISOString()
-    };
-    
-    const mockToken = 'mock-jwt-token-' + Math.random().toString(36).substring(2);
-    
-    localStorage.setItem(this.tokenKey, mockToken);
-    localStorage.setItem(this.userKey, JSON.stringify(mockUser));
-    this.currentUserSubject.next(mockUser);
-    this.authStatusSubject.next(true);
-  }
 
   // Validate OTP
   validateOtp(email: string, otp: string): Observable<any> {
@@ -115,5 +98,11 @@ export class AuthService {
   // Resend OTP
   resendOtp(email: string): Observable<any> {
     return this.http.post(`${this.otpUrl}/resend`, email);
+  }
+
+
+  // Get user by ID
+  getUserById(userId: number): Observable<User> {
+    return this.http.get<User>(`${this.userUrl}/${userId}`);
   }
 }

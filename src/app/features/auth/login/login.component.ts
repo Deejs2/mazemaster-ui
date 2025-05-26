@@ -60,17 +60,5 @@ export class LoginComponent {
         }
       });
     }
-    
-    // Demo function to simulate login without backend
-    simulateLogin() {
-      this.loading = true;
-      this.error = '';
-      
-      setTimeout(() => {
-        this.authService.simulateLogin('DemoPlayer');
-        this.router.navigate([this.returnUrl]);
-        this.loading = false;
-      }, 800);
-    }
 
 }
