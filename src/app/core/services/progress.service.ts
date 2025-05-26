@@ -11,6 +11,8 @@ import { environment } from '../../../environments/environment.development';
 })
 export class ProgressService {
   private apiUrl = environment.baseUrl+'/user-progress';
+  private userProgressUrl = environment.baseUrl+'/public/user-progress';
+
   
   // For demonstration purposes, we'll store progress locally as well
   private progressKey = 'maze_master_progress';
@@ -65,6 +67,10 @@ export class ProgressService {
         return of(this.getLocalProgress());
       })
     );
+  }
+
+  getUserProgressByUserId(userId: number): Observable<UserProgress[]> {
+    return this.http.get<any>(`${this.userProgressUrl}/${userId}`);
   }
 
   // Local storage methods for offline/demo functionality

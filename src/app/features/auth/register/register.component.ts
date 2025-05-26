@@ -78,16 +78,4 @@ export class RegisterComponent {
         }
       });
     }
-    
-    // Demo function to simulate registration without backend
-    simulateRegister() {
-      this.loading = true;
-      this.error = '';
-      
-      setTimeout(() => {
-        this.authService.simulateLogin('NewPlayer' + Math.floor(Math.random() * 1000));
-        this.router.navigate(['/levels']);
-        this.loading = false;
-      }, 800);
-    }
   }

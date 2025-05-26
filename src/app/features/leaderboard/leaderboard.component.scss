@@ -1,35 +1,330 @@
+// Enhanced Leaderboard Styles
 
+// Custom CSS Variables
+// :root {
+//   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+//   --gold-gradient: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+//   --silver-gradient: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+//   --bronze-gradient: linear-gradient(135deg, #cd7f32 0%, #d4a574 100%);
+//   --shadow-soft: 0 2px 20px rgba(0, 0, 0, 0.08);
+//   --shadow-strong: 0 8px 30px rgba(0, 0, 0, 0.12);
+// }
+
+// Background gradient for the main container
+.bg-gradient-primary {
+  background: var(--primary-gradient) !important;
+}
+
+// Enhanced rank badges
 .rank-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 14px;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-strong);
+  }
+}
+
+.rank-1 {
+  background: var(--gold-gradient);
+  color: #333;
+  border-color: #ffd700;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  
+  &::before {
+    content: '👑';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 16px;
+  }
+}
+
+.rank-2 {
+  background: var(--silver-gradient);
+  color: #333;
+  border-color: #c0c0c0;
+  box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3);
+}
+
+.rank-3 {
+  background: var(--bronze-gradient);
+  color: white;
+  border-color: #cd7f32;
+  box-shadow: 0 4px 15px rgba(205, 127, 50, 0.3);
+}
+
+.rank-other {
+  background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+  color: #495057;
+  border-color: #dee2e6;
+}
+
+// Enhanced card styles
+.card {
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+  }
+}
+
+.card-header {
+  border: none;
+  background: var(--primary-gradient) !important;
+}
+
+// Enhanced table styles
+.datatable-table {
+  thead th {
+    background: #343a40 !important;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    
+    button {
+      color: white !important;
+      text-decoration: none;
+      font-weight: 600;
+      
+      &:hover {
+        color: #ffc107 !important;
+      }
+    }
   }
   
-  .rank-1 {
-    background-color: gold;
-    color: #333;
+  tbody tr {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: rgba(0, 123, 255, 0.05) !important;
+      transform: scale(1.005);
+    }
+    
+    &.table-warning {
+      background: linear-gradient(90deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+      border-left: 4px solid #ffc107;
+    }
   }
   
-  .rank-2 {
-    background-color: silver;
-    color: #333;
+  td {
+    vertical-align: middle;
+    border-color: #f8f9fa;
+    padding: 16px 12px;
+  }
+}
+
+// Avatar styling
+.avatar-wrapper {
+  position: relative;
+  
+  .avatar {
+    box-shadow: var(--shadow-soft);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+// Enhanced buttons
+.btn-outline-light {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
   }
   
-  .rank-3 {
-    background-color: #cd7f32; /* bronze */
-    color: white;
-  }
-  
-  .rank-other {
-    background-color: #e9ecef;
-    color: #495057;
-  }
-  
-  .btn-outline-light.active {
+  &.active {
     background-color: white;
-    color: var(--primary);
+    color: #1d3cc5 !important;
+    border-color: white;
+    box-shadow: var(--shadow-soft);
   }
+}
+
+// Level badges
+.getLevelBadgeClass {
+  &.badge-easy {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  }
+  
+  &.badge-medium {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  }
+  
+  &.badge-hard {
+    background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+  }
+}
+
+// Input group enhancements
+.input-group {
+  .input-group-text {
+    background: white;
+    border-color: #e3e6f0;
+  }
+  
+  .form-control {
+    border-color: #e3e6f0;
+    padding: 12px 16px;
+    
+    &:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+  }
+}
+
+// Pagination enhancements
+.pagination {
+  .page-link {
+    border-color: #e3e6f0;
+    color: #667eea;
+    padding: 8px 12px;
+    
+    &:hover {
+      background-color: #667eea;
+      border-color: #667eea;
+      color: white;
+    }
+  }
+  
+  .page-item.active .page-link {
+    background-color: #667eea;
+    border-color: #667eea;
+  }
+}
+
+// Animation classes
+.animate-row {
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Loading placeholder enhancements
+.placeholder-glow .placeholder {
+  animation: placeholder-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes placeholder-glow {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+// Responsive enhancements
+@media (max-width: 768px) {
+  .datatable-table {
+    font-size: 14px;
+    
+    .rank-badge {
+      width: 30px;
+      height: 30px;
+      font-size: 12px;
+    }
+    
+    .avatar {
+      width: 32px !important;
+      height: 32px !important;
+    }
+    
+    td {
+      padding: 12px 8px;
+    }
+  }
+  
+  .btn-group .btn {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .display-4 {
+    font-size: 2rem;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+    
+    .btn {
+      margin-bottom: 5px;
+      border-radius: 6px !important;
+    }
+  }
+  
+  .table-responsive {
+    font-size: 12px;
+  }
+}
+
+// Custom scrollbar
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+// Tooltip enhancements
+[title] {
+  position: relative;
+  cursor: pointer;
+}
+
+// Action button group
+.btn-group .btn {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+  }
+}

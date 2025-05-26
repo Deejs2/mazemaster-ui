@@ -22,7 +22,9 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
       // Handle unauthorized or forbidden errors
       if (error.status === 401 || error.status === 403) {
         localStorage.clear(); // Clear tokens and user data
-        router.navigate(['/auth/login']); // Redirect to login
+        router.navigate(['/auth/login']).then(() => {
+          window.location.reload(); // Force a full page reload
+        });
       }
       return throwError(() => error);
     })

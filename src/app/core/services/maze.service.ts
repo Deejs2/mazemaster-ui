@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ApiResponse, Maze, PlayerPosition, MazeCell } from '../models/maze.model';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MazeService {
-  private apiUrl = 'http://localhost:8080/api/v1/maze';
+  private apiUrl = environment.baseUrl + '/maze';
 
   constructor(private http: HttpClient) {}
 

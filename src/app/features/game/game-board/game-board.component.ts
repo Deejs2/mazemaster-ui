@@ -39,12 +39,19 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   ) {}
   
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.levelCategory = params['category'].toUpperCase();
-      this.levelNumber = +params['level'];
-      
-      this.loadMaze();
-    });
+  this.route.params.subscribe(params => {
+    this.levelCategory = params['category'].toUpperCase();
+    this.levelNumber = +params['level'];
+
+    // Prevent unauthenticated users from accessing MEDIUM or HARD
+    if (!this.authService.isAuthenticated() && this.levelCategory !== 'EASY') {
+      alert('Please register or login to play Medium and Hard levels!');
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
+    this.loadMaze();
+  });
   }
   
   ngOnDestroy(): void {

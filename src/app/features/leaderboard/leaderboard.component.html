@@ -1,90 +1,279 @@
-<div class="container py-5">
+<div class="container-fluid py-5 bg-light">
+  <div class="container">
+    <!-- Header Section -->
     <div class="text-center mb-5" data-aos="fade-up">
-      <h1 class="mb-3">Global Leaderboard</h1>
-      <p class="lead">
-        Top players ranked by total score and completion time
-      </p>
-    </div>
-    
-    <div class="row">
-      <div class="col-lg-8 mx-auto">
-        <div class="card" data-aos="fade-up" data-aos-delay="100">
-          <div class="card-header bg-primary text-white">
-            <div class="d-flex justify-content-between align-items-center">
-              <h2 class="h5 mb-0">Top Players</h2>
-              
-              <div class="btn-group" role="group">
-                <button 
-                  type="button" 
-                  class="btn btn-outline-light btn-sm" 
-                  [class.active]="activeTab === 'global'"
-                  (click)="setActiveTab('global')">
-                  Global
-                </button>
-                <button 
-                  type="button" 
-                  class="btn btn-outline-light btn-sm" 
-                  [class.active]="activeTab === 'easy'"
-                  (click)="setActiveTab('easy')">
-                  Easy
-                </button>
-                <button 
-                  type="button" 
-                  class="btn btn-outline-light btn-sm" 
-                  [class.active]="activeTab === 'medium'"
-                  (click)="setActiveTab('medium')">
-                  Medium
-                </button>
-                <button 
-                  type="button" 
-                  class="btn btn-outline-light btn-sm" 
-                  [class.active]="activeTab === 'hard'"
-                  (click)="setActiveTab('hard')">
-                  Hard
-                </button>
+      <div class="display-4 fw-bold text-primary mb-3">
+        <i class="bi bi-trophy-fill me-3"></i>Global Leaderboard
+      </div>
+      <p class="lead text-muted">Top players ranked by total score and completion time</p>
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+              <div class="text-warning display-6 mb-2">
+                <i class="bi bi-people-fill"></i>
               </div>
-            </div>
-          </div>
-          <div class="card-body p-0">
-            <div class="table-responsive">
-              <table class="table table-hover table-striped mb-0">
-                <thead class="table-light">
-                  <tr>
-                    <th>Rank</th>
-                    <th>Player</th>
-                    <th>Score</th>
-                    <th>Time</th>
-                    <th>Levels</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let entry of currentLeaderboard; let i = index" 
-                      [class.table-primary]="isCurrentUser(entry.userId)">
-                    <td class="text-center">
-                      <span class="rank-badge" [class]="getRankClass(i + 1)">{{ i + 1 }}</span>
-                    </td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <i *ngIf="isCurrentUser(entry.userId)" class="bi bi-person-fill text-primary me-2"></i>
-                        {{ entry.username }}
-                        <span *ngIf="isCurrentUser(entry.userId)" class="badge bg-primary ms-2">You</span>
-                      </div>
-                    </td>
-                    <td>{{ entry.totalScore }}</td>
-                    <td>{{ formatTime(entry.totalTime) }}</td>
-                    <td>{{ entry.levelsCompleted }}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <h5 class="card-title">Total Players</h5>
+              <p class="card-text display-6 fw-bold text-primary">{{ getTotalPlayers() }}</p>
             </div>
           </div>
         </div>
-        
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+              <div class="text-success display-6 mb-2">
+                <i class="bi bi-graph-up-arrow"></i>
+              </div>
+              <h5 class="card-title">Average Score</h5>
+              <p class="card-text display-6 fw-bold text-success">{{ getAverageScore() }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+              <div class="text-info display-6 mb-2">
+                <i class="bi bi-stopwatch-fill"></i>
+              </div>
+              <h5 class="card-title">Best Time</h5>
+              <p class="card-text display-6 fw-bold text-info">{{ getBestTime() }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Leaderboard Card -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card border-0 shadow-lg" data-aos="fade-up" data-aos-delay="100">
+          <!-- Card Header with Tabs and Search -->
+          <div class="card-header bg-gradient-primary py-4">
+            <div class="row align-items-center">
+              <div class="col-lg-6">
+                <h2 class="h4 mb-0 fw-bold">
+                  <i class="bi bi-award-fill me-2"></i>Top Players
+                </h2>
+              </div>
+              <div class="col-lg-6">
+                <div class="btn-group w-100 mt-3 mt-lg-0" role="group">
+                  <button type="button" 
+                          class="btn btn-outline-light btn-sm flex-fill text-black" 
+                          [class.active]="activeTab === 'global'" 
+                          (click)="setActiveTab('global')">
+                    <i class="bi bi-globe2 me-1"></i>Global
+                  </button>
+                  <button type="button" 
+                          class="btn btn-outline-light btn-sm flex-fill text-black" 
+                          [class.active]="activeTab === 'easy'" 
+                          (click)="setActiveTab('easy')">
+                    <i class="bi bi-circle-fill text-success me-1"></i>Easy
+                  </button>
+                  <button type="button" 
+                          class="btn btn-outline-light btn-sm flex-fill text-black" 
+                          [class.active]="activeTab === 'medium'" 
+                          (click)="setActiveTab('medium')">
+                    <i class="bi bi-circle-fill text-warning me-1"></i>Medium
+                  </button>
+                  <button type="button" 
+                          class="btn btn-outline-light btn-sm flex-fill text-black" 
+                          [class.active]="activeTab === 'hard'" 
+                          (click)="setActiveTab('hard')">
+                    <i class="bi bi-circle-fill text-danger me-1"></i>Hard
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search and Filter Controls -->
+          <div class="card-body border-bottom bg-light">
+            <div class="row g-3 d-flex justify-content-between align-items-center">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                  </span>
+                  <input type="text" 
+                         class="form-control border-start-0" 
+                         placeholder="Search players..." 
+                         [(ngModel)]="searchTerm"
+                         (input)="onSearch()">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <select class="form-select" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+                  <option value="10">Show 10</option>
+                  <option value="25">Show 25</option>
+                  <option value="50">Show 50</option>
+                  <option value="100">Show 100</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Table -->
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover table-striped mb-0 datatable-table">
+                <thead class="table-dark sticky-top">
+                  <tr>
+                    <th class="text-center" style="width: 80px;">
+                      <button class="btn btn-sm btn-link text-white p-0" (click)="sortBy('rank')">
+                        Rank <i class="bi" [class]="getSortIcon('rank')"></i>
+                      </button>
+                    </th>
+                    <th>
+                      <button class="btn btn-sm btn-link text-white p-0" (click)="sortBy('player')">
+                        Player <i class="bi" [class]="getSortIcon('player')"></i>
+                      </button>
+                    </th>
+                    <th class="text-center">
+                      <button class="btn btn-sm btn-link text-white p-0" (click)="sortBy('score')">
+                        Score <i class="bi" [class]="getSortIcon('score')"></i>
+                      </button>
+                    </th>
+                    <th class="text-center">
+                      <button class="btn btn-sm btn-link text-white p-0" (click)="sortBy('time')">
+                        Time <i class="bi" [class]="getSortIcon('time')"></i>
+                      </button>
+                    </th>
+                    <th class="text-center">
+                      <button class="btn btn-sm btn-link text-white p-0" (click)="sortBy('levels')">
+                        Levels <i class="bi" [class]="getSortIcon('levels')"></i>
+                      </button>
+                    </th>
+                    <th class="text-center" style="width: 100px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let entry of paginatedData; let i = index; trackBy: trackByUserId" 
+                      [class.table-warning]="isCurrentUser(entry.userId)"
+                      [class.animate-row]="true">
+                    <td class="text-center align-middle">
+                      <div class="position-relative">
+                        <span class="rank-badge" [class]="getRankClass(entry.globalRank || (currentPage * pageSize + i + 1))">
+                          {{ entry.globalRank || (currentPage * pageSize + i + 1) }}
+                        </span>
+                        <span *ngIf="entry.globalRank <= 3" class="position-absolute top-0 start-100 translate-middle">
+                          <i class="bi bi-star-fill text-warning small"></i>
+                        </span>
+                      </div>
+                    </td>
+                    <td class="align-middle">
+                      <div class="d-flex align-items-center">
+                        <div class="avatar-wrapper me-3">
+                          <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                               style="width: 40px; height: 40px;">
+                            <i class="bi bi-person-fill"></i>
+                          </div>
+                          <span *ngIf="isCurrentUser(entry.userId)" 
+                                class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle">
+                            <span class="visually-hidden">Online</span>
+                          </span>
+                        </div>
+                        <div>
+                          <div class="fw-bold">
+                            <span *ngIf="userMap[entry.userId]; else loadingTemplate">
+                              {{ userMap[entry.userId] }}
+                            </span>
+                            <ng-template #loadingTemplate>
+                              <div class="placeholder-glow">
+                                <span class="placeholder col-6"></span>
+                              </div>
+                            </ng-template>
+                          </div>
+                          <small class="text-muted">
+                            <span *ngIf="isCurrentUser(entry.userId)" class="badge bg-primary">You</span>
+                            <span *ngIf="entry.isOnline" class="badge bg-success ms-1">Online</span>
+                          </small>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center align-middle">
+                      <div class="fw-bold text-primary">{{ entry.totalScore | number }}</div>
+                      <small class="text-muted">points</small>
+                    </td>
+                    <td class="text-center align-middle">
+                      <div class="fw-bold">{{ formatTime(entry.totalTime) }}</div>
+                      <small class="text-muted">duration</small>
+                    </td>
+                    <td class="text-center align-middle">
+                      <span class="badge" [class]="getLevelBadgeClass(entry.levelsCompleted.levelCategory)">
+                        {{ entry.levelsCompleted.levelCategory }} {{ entry.levelsCompleted.levelNumber }}
+                      </span>
+                    </td>
+                    <td class="text-center align-middle">
+                      <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-primary" 
+                                (click)="viewProfile(entry.userId)"
+                                title="View Profile">
+                          <i class="bi bi-person"></i>
+                          View Profile
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Empty State -->
+              <div *ngIf="paginatedData.length === 0" class="text-center py-5">
+                <div class="text-muted">
+                  <i class="bi bi-search display-1 mb-3"></i>
+                  <h4>No players found</h4>
+                  <p>Try adjusting your search or filters</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="card-footer bg-light" *ngIf="filteredData.length > pageSize">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <small class="text-muted">
+                  Showing {{ (currentPage * pageSize) + 1 }} to {{ Math.min((currentPage + 1) * pageSize, filteredData.length) }} 
+                  of {{ filteredData.length }} entries
+                </small>
+              </div>
+              <div class="col-md-6">
+                <nav>
+                  <ul class="pagination pagination-sm justify-content-end mb-0">
+                    <li class="page-item" [class.disabled]="currentPage === 0">
+                      <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 0">
+                        <i class="bi bi-chevron-left"></i>
+                      </button>
+                    </li>
+                    <li class="page-item" 
+                        *ngFor="let page of getPageNumbers()" 
+                        [class.active]="page === currentPage">
+                      <button class="page-link" (click)="goToPage(page)">{{ page + 1 }}</button>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage >= getTotalPages() - 1">
+                      <button class="page-link" (click)="nextPage()" [disabled]="currentPage >= getTotalPages() - 1">
+                        <i class="bi bi-chevron-right"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
         <div class="mt-4 text-center" data-aos="fade-up" data-aos-delay="200">
-          <a routerLink="/levels" class="btn btn-primary">
-            Join the Competition
-          </a>
+          <div class="btn-group" role="group">
+            <a routerLink="/levels" class="btn btn-primary btn-lg">
+              <i class="bi bi-play-fill me-2"></i>Join the Competition
+            </a>
+            <button class="btn btn-outline-primary btn-lg" (click)="refreshLeaderboard()">
+              <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
